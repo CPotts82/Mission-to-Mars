@@ -22,6 +22,7 @@ def scrape_all():
         "news_paragraph": news_p,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
+        "hemispheres": hemispheres(browser),
         "last_modified": dt.datetime.now()
     }
 
@@ -96,21 +97,65 @@ def mars_facts():
     # Add try/except for error handling
     try:
         # Scrape entire facts table using Pandas .read_html()
-        df = pd.read_html('https://galaxyfacts-mars.com')[0]
+        df = pd.read_html('https://galaxyfacts-mars.com/')[0]
 
     except BaseException:
         return None
 
     # Assign columns and set index of dataframe
-    df.columns=['description', 'Mars', 'Earth']
-    df.set_index('description', inplace=True)
+    df.columns=['Description', 'Mars', 'Earth']
+    df.set_index('Description', inplace=True)
 
-    # Convert df into HTML format, add bootstrap
+    # Convert df back to html
     return df.to_html()
+
+
+# ### Hemisphere Images
+
+
+# Add Function
+def hemispheres(browser):
+
+    # Visit the mars hemispheres site
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+
+    # Parse the html
+    html = browser.html
+    hemi_soup = soup(html, 'html.parser')
+
+    # Create a list to hold the images and titles.
+    hemisphere_image_urls = []
+
+    # scrape all items for hemispheres
+    items = hemi_soup.find_all('div', class_='item')
+
+    for i in items:
+        # Create empty hemispheres dictionary
+        hemispheres = {}
+        # scrape the titles
+        titles = i.find('h3').text
+        # link for high resolution full size image
+        fs_link = i.find('a', class_='itemLink product-item').get('href')
+        # create absolute url with base url
+        abs_url = f'https://marshemispheres.com/{fs_link}'
+        # visit absolute url
+        browser.visit(abs_url)
+        # parse resulting html with soup
+        fs_img_html = browser.html
+        img_soup = soup(fs_img_html, 'html.parser')
+        original = img_soup.find('div', class_='downloads')
+        img_url = (abs_url + (original.find('a').get('href')))
+    
+        # add/append to hemisphere_image_urls list
+        hemispheres["img_url"] = img_url
+        hemispheres["title"] = titles
+        hemisphere_image_urls.append(hemispheres)
+        browser.back()
+
+    return hemisphere_image_urls
+
+
 if __name__ == "__main__":
-
-
-    # If running as script, print scraped data
+     # If running as script, print scraped data
     print(scrape_all())
-
-

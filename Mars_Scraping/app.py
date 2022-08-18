@@ -9,19 +9,20 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://localhost:27017/mars_app_db"
 mongo = PyMongo(app)
 
+
 # Define route for HTML page
-@app.route("/")
+@app.route('/')
 def index():
     mars = mongo.db.mars.find_one()
     return render_template("index.html", mars=mars)
 
-@app.route("/scrape")
+@app.route('/scrape')
 def scrape():
     mars = mongo.db.mars
     mars_data = scraping.scrape_all()
-    mars.update_one({}, {"$set": mars_data}, upsert=True)
-    return redirect('/', code=302)
+    mars.update_many({}, {"$set":mars_data}, upsert=True)
+    return "Success!"
 
 # Tell Flask to run
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
