@@ -1,6 +1,6 @@
 # Mission-to-Mars
 ## Overview
-The purpose of the Mission to Mars project was to scrape the latest news articles and images from several different websites and create a web application to display the most up-to-date information regarding the Mission to Mars. Using Beautiful Soup and Splinter to automate a browser and scrape for the latest news, storing the extracted data in MongoDB and then using Flask to create the web application to display the information. In the end we ended up using Bootstrap to add a little polish and style to the html used to build the web application. 
+The purpose of this web-scraping project was to extract the latest news articles and images from several different websites and create a web application to display the most up-to-date information regarding the Mission to Mars. Using Beautiful Soup and Splinter to automate a browser and scrape for the latest news, storing the extracted data in MongoDB and then using Flask to create the web application to display the information. In the end we ended up using Bootstrap to add a little polish and style to the html used to build the web application. 
 
 ## Resources
 Beautiful Soup, Splinter, MongoDB, Flask, Bootstrap, Jupyter Notebook, VS Code, python, html
